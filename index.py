@@ -66,7 +66,7 @@ def post_comment(comment, link):
 
 if __name__ == "__main__":
     print(datetime.utcnow().weekday())
-    if datetime.utcnow().weekday() == 4: # Fridays
+    if datetime.utcnow().weekday() == 5: # Saturday
         reddit = praw.Reddit(client_id=os.environ['REDDIT_CLIENT_ID'], 
                         client_secret=os.environ['REDDIT_CLIENT_SECRET'], 
                         user_agent='runnerreads (by /u/easy10miles)')
