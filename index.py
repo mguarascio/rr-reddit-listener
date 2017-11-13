@@ -19,11 +19,7 @@ def run(reddit, subreddit, substring):
         s = s+1
         if substring in submission.title or substring in submission.url: 
             print('_________________________________________________________________')
-            print(submission.title)
-            print(submission.url)
-            print('upvotes: ', submission.ups)
-            print('permalink: https://www.reddit.com', submission.permalink)
-            post_comment(submission.title + ', ' + submission.url, 'https://www.reddit.com' + submission.permalink)
+            post_comment(submission.title + ', ' + submission.url, 'https://www.reddit.com' + submission.permalink, submission.ups)
 
         c = 0
         submission.comments.replace_more(limit=0)
@@ -31,12 +27,9 @@ def run(reddit, subreddit, substring):
             c = c+1
             if substring in comment.body:
                 print('_____________________________________________________________')
-                print('upvotes: ', comment.ups)
-                print('permalink: https://www.reddit.com', comment.permalink)
-                print(comment.body)
-                post_comment(comment.body, 'https://www.reddit.com' + comment.permalink)
+                post_comment(comment.body, 'https://www.reddit.com' + comment.permalink, comment.ups)
 
-def post_comment(comment, link):
+def post_comment(comment, link, ups):
     url = re.search("(?P<url>https://www.amazon[^\s]+[0-9a-zA-Z//])", comment).group("url")
     print(url)
 
@@ -46,20 +39,24 @@ def post_comment(comment, link):
 
         headers = {'Authorization': 'Token ' + os.environ['RUNNERREADS_API_TOKEN']}
 
-        data = {
-            'title': 'reddit_placeholder',
-            'link': url,
-            'ASIN': asin,
-            'comments': [
-                {
-                    'text': comment,
-                    'link': link
-                }
-            ]
-        }
-        print(data)
-        response = requests.post(url=os.environ['RUNNERREADS_API'], headers=headers, json=data)
-        print(response)
+        if asin:
+            data = {
+                'title': 'reddit_placeholder',
+                'link': url,
+                'ASIN': asin,
+                'comments': [
+                    {
+                        'text': comment,
+                        'link': link,
+                        'ups': ups
+                    }
+                ]
+            }
+            print(data)
+            response = requests.post(url=os.environ['RUNNERREADS_API'], headers=headers, json=data)
+            print(response)
+        else: 
+            print('no asin found in ', url)
     except:
         e = sys.exc_info()[0]
         print('Exception posting comment: ', e)
