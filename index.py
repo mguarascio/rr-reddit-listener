@@ -19,7 +19,7 @@ def run(reddit, subreddit, substring):
         s = s+1
         if substring in submission.title or substring in submission.url: 
             print('_________________________________________________________________')
-            post_comment(submission.title + ', ' + submission.url, 'https://www.reddit.com' + submission.permalink, submission.ups)
+            post_comment(submission.title + ', ' + submission.url, 'https://www.reddit.com' + submission.permalink, submission.score)
 
         c = 0
         submission.comments.replace_more(limit=0)
@@ -27,9 +27,9 @@ def run(reddit, subreddit, substring):
             c = c+1
             if substring in comment.body:
                 print('_____________________________________________________________')
-                post_comment(comment.body, 'https://www.reddit.com' + comment.permalink, comment.ups)
+                post_comment(comment.body, 'https://www.reddit.com' + comment.permalink, comment.score)
 
-def post_comment(comment, link, ups):
+def post_comment(comment, link, score):
     url = re.search("(?P<url>https://www.amazon[^\s]+[0-9a-zA-Z//])", comment).group("url")
     print(url)
 
@@ -48,7 +48,7 @@ def post_comment(comment, link, ups):
                     {
                         'text': comment,
                         'link': link,
-                        'ups': ups
+                        'score': score
                     }
                 ]
             }
