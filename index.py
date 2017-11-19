@@ -62,8 +62,9 @@ def post_comment(comment, link, score):
         print('Exception posting comment: ', e)
 
 if __name__ == "__main__":
-    print(datetime.utcnow().weekday())
-    if datetime.utcnow().weekday() == os.environ['RUNDAY']: # 5 == Saturday
+    print('today: ', datetime.utcnow().weekday())
+    print('config: ', int(os.environ['RUNDAY']))
+    if datetime.utcnow().weekday() == int(os.environ['RUNDAY']): # 5 == Saturday
         reddit = praw.Reddit(client_id=os.environ['REDDIT_CLIENT_ID'], 
                         client_secret=os.environ['REDDIT_CLIENT_SECRET'], 
                         user_agent='runnerreads (by /u/easy10miles)')
